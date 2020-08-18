@@ -60,4 +60,5 @@ def deploy():
     arch = do_pack()
     if arch is None:
         return False
-    return do_deploy(arch)
+    ret = do_deploy(arch)
+    return ret
