@@ -10,6 +10,7 @@ echo "BABABABA" > /data/web_static/releases/test/index.html
 GETOUT="/data/web_static/current"
 if test -f "$GETOUT"; then
 	rm -rf $GETOUT
+fi
 ln -sf /data/web_static/releases/test/ /data/web_static/current
 chown -R ubuntu:ubuntu /data
 printf %s "server {
