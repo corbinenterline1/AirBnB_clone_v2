@@ -1,19 +1,20 @@
 #!/usr/bin/python3
-""" using fabric"""
-import os.path
+"""Generated .gtz archive from contents of web_static."""
 from datetime import datetime
-from fabric.api import local
+from fabric.api import *
 
 
 def do_pack():
-    """ pack all web_static"""
-    time = datetime.utcnow()
-    file = "versions/web_static_{}{}{}{}{}{}.tgz".format(
-        time.year, time.month, time.day, time.hour,
-        time.minute, time.second)
+    """Adds all files in web_static to final archive
+    All archives stored in folder versions
+    Name of archive: web_static_<year><month><day><hour><minute>
+    function must return archive path if it's been correctly generated
+    Otherwise, return None"""
+    time = datetime.now().strftime("%Y%m%d%H%M%S")
+    local('mkdir -p versions')
     try:
-        local("mkdir -p versions")
-        local("tar -czvf {} web_static".format(file))
+        file = local('tar -czvf versions/web_static_{}.tgz web_static'
+                     .format(time))
         return file
-    except:
+    except BaseException:
         return None
