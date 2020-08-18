@@ -16,18 +16,20 @@ def do_deploy(archive_path):
     if os.path.isfile(archive_path) is False:
         return False
     path = "/data/web_static/releases/"
+    cur = "/data/web_static/current"
     file = archive_path.split('/')[-1]
     name = file.split(".")[0]
     try:
         put(archive_path, "/tmp/")
-        run("rm -rf {}{}/".format(path, name))
+        run("rm -rf {}{}".format(path, name))
         run("mkdir -p {}{}/".format(path, name))
         run("tar -xzf /tmp/{} -C {}{}/".format(file, path, name))
         run("rm /tmp/{}".format(file))
-        run("mv {}{}/web_static/* {}{}/".format(path, name, path, name))
+        run("mv {}{}/web_static/* "
+            "{}{}/".format(path, name, path, name))
         run("rm -rf {}{}/web_static".format(path, name))
-        run("rm -rf /data/web_static/current")
-        run("ln -s {}{}/ /data/web_static/current".format(path, name))
+        run("rm -rf {}".format(cur))
+        run("ln -s {}{}/ {}".format(path, name, cur))
         return True
     except:
         return False
