@@ -1,25 +1,15 @@
 #!/usr/bin/python3
-"""DO IT ALL"""
+"""Distributes archive to yo web servers, using do_deploy"""
 from fabric.api import *
 import os.path
-from datetime import datetime
-env.hosts = ['34.75.121.144', '54.227.55.35']
+env.hosts = ['34.228.186.149', '34.73.35.13']
 
-
-def do_pack():
-    """Adds all files in web_static to final archive
-    All archives sotred in folder versions
-    Name of archive: web_static_<year><month><day><hour><minute><second>
-    function must return archive path if it's been correctly generated
-    Otherwise, return None"""
-    time = datetime.now().strftime("%Y%m%d%H%M%S")
-    local('mkdir -p versions')
-    try:
-        file = local('tar -czvf versions/web_static_{}.tgz web_static'
-                     .format(time))
-        return file
-    except BaseException:
-        return None
+def deploy():
+    """supposed to pack & deploy, probably won't"""
+    pckg = do_pack()
+    if pckg is None:
+        return False
+    return do_deploy(pckg)
 
 
 def do_deploy(archive_path):
@@ -52,13 +42,17 @@ def do_deploy(archive_path):
         return False
 
 
-def deploy():
-    """Calls do_pack function and store the path of the created archive
-    Return False if no archive made
-    Call do_deploy(archive_path), doin all that shit
-    Return value of do_deploy. EZ MONEY"""
-    arch = do_pack()
-    if arch is None:
-        return False
-    ret = do_deploy(arch)
-    return ret
+def do_pack():
+    """Adds all files in web_static to final archive
+    All archives stored in folder versions
+    Name of archive: web_static_<year><month><day><hour><minute>
+    function must return archive path if it's been correctly generated
+    Otherwise, return None"""
+    time = datetime.now().strftime("%Y%m%d%H%M%S")
+    local('mkdir -p versions')
+    try:
+        file = local('tar -czvf versions/web_static_{}.tgz web_static'
+                     .format(time))
+        return file
+    except BaseException:
+        return None
