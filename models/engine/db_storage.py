@@ -31,7 +31,7 @@ class DBStorage:
     def all(self, cls=None):
         """ all method for Db storage class"""
         if cls:
-            objs = self.__session.query(eval(cls))
+            objs = self.__session.query(cls)
         else:
             objs = self.__session.query(State).all()
             objs += self.__session.query(City).all()
@@ -61,3 +61,7 @@ class DBStorage:
         sesh = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(sesh)
         self.__session = Session()
+
+    def close(self):
+        """closes the sqlalchemy session"""
+        self.__session.close()
